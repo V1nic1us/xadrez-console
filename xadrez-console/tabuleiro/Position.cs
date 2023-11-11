@@ -8,15 +8,15 @@ namespace xadrez_console.tabuleiro
 {
     internal class Position
     {
-        public int Linha { get; set; }
-        public int Coluna { get; set; }
+        public int Line { get; set; }
+        public int Column { get; set; }
 
-        public Position(int linha, int coluna)
+        public Position(int line, int column)
         {
-            Linha = linha;
-            Coluna = coluna;
+            Line = line;
+            Column = column;
         }
 
-        public override string ToString() => $"{Linha}, {Coluna}";
+        public override string ToString() => $"{Line}, {Column}";
     }
 }
