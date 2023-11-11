@@ -13,7 +13,7 @@ namespace xadrez_console.tabuleiro
         public int AmtMovements { get; protected set; }
         public Board Board { get; protected set; }
 
-        public Part(Position position,Board board, Color color)
+        public Part(Board board, Color color)
         {
             Position = null;
             Color = color;
