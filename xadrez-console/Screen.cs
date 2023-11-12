@@ -13,6 +13,7 @@ namespace xadrez_console
         {
             for (int i = 0; i < board.Lines; i++)
             {
+                Console.Write(8 - i + " ");
                 for (int j = 0; j < board.Columns; j++)
                 {
                     if (board.Part(i, j) == null)
@@ -21,11 +22,29 @@ namespace xadrez_console
                     }
                     else
                     {
-                        Console.Write(board.Part(i, j) + " ");
+                        PrintPart(board.Part(i, j));
+                        Console.Write(" ");
                     }
+
                 }
                 Console.WriteLine();
             }
-        }   
+            Console.WriteLine("  A B C D E F G H");
+        }
+
+        public static void PrintPart(Part part)
+        {
+            if (part.Color == Color.White)
+            {
+                Console.Write(part);
+            }
+            else
+            {
+                ConsoleColor aux = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(part);
+                Console.ForegroundColor = aux;
+            }
+        }
     }
 }
