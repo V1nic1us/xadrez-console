@@ -24,10 +24,42 @@ namespace xadrez_console.tabuleiro
             return Parts[line, column];
         }
 
+        public Part Part(Position position)
+        {
+            return Parts[position.Line, position.Column];
+        }
+
+        public bool PartExists(Position position)
+        {
+            ValidatePosition(position);
+            return Part(position) != null;
+        }
+
         public void PutPart(Part part, Position position)
         {
+            if (PartExists(position))
+            {
+                throw new BoardException("There is already a part in this position!");
+            }
             Parts[position.Line, position.Column] = part;
             part.Position = position;
+        }
+
+        public bool ValidPosition(Position position)
+        {
+            if (position.Line < 0 || position.Line >= Lines || position.Column < 0 || position.Column >= Columns)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void ValidatePosition(Position position)
+        {
+            if (!ValidPosition(position))
+            {
+                throw new BoardException("Invalid position!");
+            }
         }
     }
 }
