@@ -20,5 +20,10 @@ namespace xadrez_console.tabuleiro
             Board = board;
             AmtMovements = 0;
         }
+
+        public void IncrementMovementQuantity()
+        {
+            AmtMovements++;
+        }
     }
 }
