@@ -11,7 +11,7 @@ namespace xadrez_console
     {
         public static void PrintBoard(Board board)
         {
-            for (int i = 0; i < board.Lines; i++)
+            for (int i = 0; i < board.Rows; i++)
             {
                 Console.Write(8 - i + " ");
                 for (int j = 0; j < board.Columns; j++)
