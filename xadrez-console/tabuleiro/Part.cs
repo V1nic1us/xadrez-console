@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace xadrez_console.tabuleiro
 {
-    internal class Part
+    internal abstract class Part
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
@@ -21,9 +21,32 @@ namespace xadrez_console.tabuleiro
             AmtMovements = 0;
         }
 
+        public abstract bool[,] PossibleMovements();
+
         public void IncrementMovementQuantity()
         {
             AmtMovements++;
+        }
+
+        public void DecrementMovementQuantity()
+        {
+            AmtMovements--;
+        }
+
+        public bool ExistPossibleMovements()
+        {
+            bool[,] mat = PossibleMovements();
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Columns; j++)
+                {
+                    if (mat[i, j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
