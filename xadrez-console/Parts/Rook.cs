@@ -7,9 +7,9 @@ using xadrez_console.tabuleiro;
 
 namespace xadrez_console.Parts
 {
-    internal class Tower: Part
+    internal class Rook: Part
     {
-        public Tower(Board board, Color color) : base(board, color) { }
+        public Rook(Board board, Color color) : base(board, color) { }
 
         public override string ToString()
         {

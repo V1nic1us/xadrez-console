@@ -7,13 +7,13 @@ using xadrez_console.tabuleiro;
 
 namespace xadrez_console.Parts
 {
-    internal class Lady: Part
+    internal class Knight: Part
     {
-        public Lady(Board board, Color color) : base(board, color) { }
+        public Knight(Board board, Color color) : base(board, color) { }
 
         public override string ToString()
         {
-            return "L";
+            return "H";
         }
     }
 }
