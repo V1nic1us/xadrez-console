@@ -8,15 +8,15 @@ namespace xadrez_console.tabuleiro
 {
     internal class Board
     {
-        public int Lines { get; set; }
+        public int Rows { get; set; }
         public int Columns { get; set; }
         private Part[,] Parts;
 
-        public Board(int lines, int columns)
+        public Board(int rows, int columns)
         {
-            Lines = lines;
+            Rows = rows;
             Columns = columns;
-            Parts = new Part[lines, columns];
+            Parts = new Part[rows, columns];
         }
 
         public Part Part(int line, int column)
@@ -26,7 +26,7 @@ namespace xadrez_console.tabuleiro
 
         public Part Part(Position position)
         {
-            return Parts[position.Line, position.Column];
+            return Parts[position.Row, position.Column];
         }
 
         public bool PartExists(Position position)
@@ -41,7 +41,7 @@ namespace xadrez_console.tabuleiro
             {
                 throw new BoardException("There is already a part in this position!");
             }
-            Parts[position.Line, position.Column] = part;
+            Parts[position.Row, position.Column] = part;
             part.Position = position;
         }
 
@@ -53,13 +53,13 @@ namespace xadrez_console.tabuleiro
             }
             Part aux = Part(position);
             aux.Position = null;
-            Parts[position.Line, position.Column] = null;
+            Parts[position.Row, position.Column] = null;
             return aux;
         }
 
         public bool ValidPosition(Position position)
         {
-            if (position.Line < 0 || position.Line >= Lines || position.Column < 0 || position.Column >= Columns)
+            if (position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column >= Columns)
             {
                 return false;
             }
