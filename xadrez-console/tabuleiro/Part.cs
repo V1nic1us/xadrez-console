@@ -48,5 +48,10 @@ namespace xadrez_console.tabuleiro
             }
             return false;
         }
+
+        public bool CanMoveTo(Position position)
+        {
+            return PossibleMovements()[position.Row, position.Column];
+        }
     }
 }
