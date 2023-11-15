@@ -14,27 +14,43 @@ namespace xadrez_console
 
                 while (!match.Finished)
                 {
-                    Console.Clear();
-                    Screen.PrintBoard(match.Board);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.PrintBoard(match.Board);
+                        Console.WriteLine();
+                        Console.WriteLine("Turn: " + match.Turn);
+                        Console.WriteLine("Waiting for player: " + match.CurrentPlayer);
 
-                    Console.WriteLine("Origin: ");
-                    Position originPosition = Screen.ReadChessPosition().ToPosition();
+                        Console.WriteLine();
+                        Console.WriteLine("Origin: ");
+                        Position originPosition = Screen.ReadChessPosition().ToPosition();
+                        match.ValidateOriginPosition(originPosition);
 
-                    bool[,] possiblePositions = match.Board.Part(originPosition).PossibleMovements();
-                    Console.Clear();
-                    Screen.PrintBoard(match.Board, possiblePositions);
+                        bool[,] possiblePositions = match.Board.Part(originPosition).PossibleMovements();
+                        Console.Clear();
+                        Screen.PrintBoard(match.Board, possiblePositions);
 
-                    Console.WriteLine("Destiny: ");
-                    Position destinyPosition = Screen.ReadChessPosition().ToPosition();
+                        Console.WriteLine();
+                        Console.WriteLine("Destiny: ");
+                        Position destinyPosition = Screen.ReadChessPosition().ToPosition();
+                        match.ValidateDestinyPosition(originPosition, destinyPosition);
 
-                    match.ExecuteMovement(originPosition, destinyPosition);
-
+                        match.PerformMove(originPosition, destinyPosition);
+                    }
+                    catch (BoardException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadLine();
+                    }
                 }
             }
             catch (BoardException e)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadLine();
             }
         }
     }
