@@ -9,6 +9,53 @@ namespace xadrez_console
 {
     internal class Screen
     {
+        public static void PrintMatch(ChessMatch match)
+        {
+            PrintBoard(match.Board);
+            Console.WriteLine();
+            PrintCapturedParts(match);
+            Console.WriteLine();
+            Console.WriteLine("Turn: " + match.Turn);
+            Console.WriteLine("Waiting for player: " + match.CurrentPlayer);
+            //if (!match.Finished)
+            //{
+            //    Console.WriteLine("Waiting for move: " + match.CurrentPlayer);
+            //    if (match.Check)
+            //    {
+            //        Console.WriteLine("CHECK!");
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("CHECKMATE!");
+            //    Console.WriteLine("Winner: " + match.CurrentPlayer);
+            //}
+        }
+
+        public static void PrintCapturedParts(ChessMatch match)
+        {
+            Console.WriteLine("Captured parts: ");
+            Console.Write("White: ");
+            PrintSet(match.CapturedPieces(Color.White));
+            Console.WriteLine();
+            Console.Write("Black: ");
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintSet(match.CapturedPieces(Color.Black));
+            Console.ForegroundColor = aux;
+            Console.WriteLine();
+        }
+
+        public static void PrintSet(HashSet<Part> set)
+        {
+            Console.Write("[");
+            foreach (Part x in set)
+            {
+                Console.Write(x + " ");
+            }
+            Console.Write("]");
+        }
+
         public static void PrintBoard(Board board)
         {
             for (int i = 0; i < board.Rows; i++)
@@ -26,7 +73,7 @@ namespace xadrez_console
         public static void PrintBoard(Board board, bool[,] positionPossibles)
         {
             ConsoleColor originalBackground = Console.BackgroundColor;
-            ConsoleColor changedBackground = ConsoleColor.DarkGray;
+            ConsoleColor changedBackground = ConsoleColor.DarkCyan;
 
             for (int i = 0; i < board.Rows; i++)
             {
@@ -68,7 +115,10 @@ namespace xadrez_console
             {
                 if (part.Color == Color.White)
                 {
+                    ConsoleColor aux = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(part);
+                    Console.ForegroundColor = aux;
                 }
                 else
                 {
