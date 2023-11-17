@@ -44,10 +44,10 @@ namespace xadrez_console.tabuleiro
 
         public void PerformMove(Position origin, Position destiny)
         {
-            ExecuteMovement(origin, destiny);
+            Part capturedPart = ExecuteMovement(origin, destiny);
             if (IsInCheck(CurrentPlayer))
             {
-                UndoMovement(origin, destiny);
+                UndoMovement(origin, destiny, capturedPart);
                 throw new BoardException("You can't put yourself in check!");
             }
             if (IsInCheck(Opponent(CurrentPlayer)))
@@ -70,17 +70,16 @@ namespace xadrez_console.tabuleiro
             }
         }
 
-        public void UndoMovement(Position origin, Position destiny)
+        public void UndoMovement(Position origin, Position destiny, Part capturedPart)
         {
             Part p = Board.RemovePart(destiny);
             p.DecrementMovementQuantity();
-            Part capturedPart = Board.RemovePart(origin);
-            Board.PutPart(p, origin);
             if (capturedPart != null)
             {
                 Board.PutPart(capturedPart, destiny);
                 CapturedParts.Remove(capturedPart);
             }
+            Board.PutPart(p, origin);
         }
 
         public void ValidateOriginPosition(Position position)
@@ -170,7 +169,7 @@ namespace xadrez_console.tabuleiro
                             Position destiny = new Position(i, j);
                             Part capturedPart = ExecuteMovement(origin, destiny);
                             bool testCheck = IsInCheck(color);
-                            UndoMovement(origin, destiny);
+                            UndoMovement(origin, destiny, capturedPart);
                             if (!testCheck)
                             {
                                 return false;
@@ -225,9 +224,13 @@ namespace xadrez_console.tabuleiro
 
         public void PutPieces()
         {
-            PutNewPart(new Rook(Board, Color.White), 'a', 1);
+            PutNewPart(new Rook(Board, Color.White), 'd', 2);
             PutNewPart(new Rook(Board, Color.Black), 'a', 8);
             PutNewPart(new Rook(Board, Color.White), 'h', 1);
+            PutNewPart(new Rook(Board, Color.White), 'f', 1);
+            PutNewPart(new Rook(Board, Color.Black), 'f', 8);
+            PutNewPart(new Rook(Board, Color.White), 'd', 1);
+            PutNewPart(new Rook(Board, Color.Black), 'd', 8);
             PutNewPart(new Rook(Board, Color.Black), 'h', 8);
             PutNewPart(new King(Board, Color.White), 'e', 1);
             PutNewPart(new King(Board, Color.Black), 'e', 8);
