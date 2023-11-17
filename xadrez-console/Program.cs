@@ -11,17 +11,14 @@ namespace xadrez_console
             try
             {
                 ChessMatch match = new ChessMatch();
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
 
                 while (!match.Finished)
                 {
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(match.Board);
-                        Console.WriteLine();
-                        Console.WriteLine("Turn: " + match.Turn);
-                        Console.WriteLine("Waiting for player: " + match.CurrentPlayer);
-
+                        Screen.PrintMatch(match);
                         Console.WriteLine();
                         Console.WriteLine("Origin: ");
                         Position originPosition = Screen.ReadChessPosition().ToPosition();
