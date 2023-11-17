@@ -13,6 +13,8 @@ namespace xadrez_console.tabuleiro
         public int Turn { get; set; }
         public Color CurrentPlayer { get; set; }
         public bool Finished { get; private set; }
+        public HashSet<Part> Parts;
+        public HashSet<Part> CapturedParts;
 
         public ChessMatch()
         {
@@ -21,6 +23,8 @@ namespace xadrez_console.tabuleiro
             CurrentPlayer = Color.White;
             Finished = false;
             PutPieces();
+            Parts = new HashSet<Part>();
+            CapturedParts = new HashSet<Part>();
         }
 
         public void ExecuteMovement(Position origin, Position destiny)
@@ -29,6 +33,10 @@ namespace xadrez_console.tabuleiro
             p.IncrementMovementQuantity();
             Part capturedPart = Board.RemovePart(destiny);
             Board.PutPart(p, destiny);
+            if (capturedPart != null)
+            {
+                CapturedParts.Add(capturedPart);
+            }
         }
 
         public void PerformMove(Position origin, Position destiny)
@@ -66,34 +74,68 @@ namespace xadrez_console.tabuleiro
 
         public void ChangePlayer()
         {
-            if (CurrentPlayer == Color.White)
+            _ = CurrentPlayer == Color.White ? CurrentPlayer = Color.Black : CurrentPlayer = Color.White; // _ = means that the variable will not be used
+        }
+
+        public void PutNewPart(Part part, char column, int row)
+        {
+            Board.PutPart(part, new ChessPosition(column, row).ToPosition());
+            Parts.Add(part);
+        }
+
+        public void ValidateCapturedPart(Part capturedPart)
+        {
+            if (capturedPart == null)
             {
-                CurrentPlayer = Color.Black;
+                throw new BoardException("There is no part to be captured!");
             }
-            else
+        }
+
+        public HashSet<Part> CapturedPieces(Color color)
+        {
+            HashSet<Part> aux = new HashSet<Part>();
+            foreach (Part x in CapturedParts)
             {
-                CurrentPlayer = Color.White;
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
             }
+            return aux;
+        }
+
+        public HashSet<Part> PiecesInGame(Color color)
+        {
+            HashSet<Part> aux = new HashSet<Part>();
+            foreach (Part x in Parts)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(CapturedPieces(color));
+            return aux;
         }
 
         public void PutPieces()
         {
-            Board.PutPart(new Rook(Board, Color.White), new ChessPosition('a', 1).ToPosition());
-            Board.PutPart(new Rook(Board, Color.Black), new ChessPosition('a', 8).ToPosition());
-            Board.PutPart(new Rook(Board, Color.White), new ChessPosition('h', 1).ToPosition());
-            Board.PutPart(new Rook(Board, Color.Black), new ChessPosition('h', 8).ToPosition());
-            Board.PutPart(new King(Board, Color.White), new ChessPosition('e', 1).ToPosition());
-            Board.PutPart(new King(Board, Color.Black), new ChessPosition('e', 8).ToPosition());
-            Board.PutPart(new Knight(Board, Color.White), new ChessPosition('b', 1).ToPosition());
-            Board.PutPart(new Knight(Board, Color.Black), new ChessPosition('b', 8).ToPosition());
-            Board.PutPart(new Knight(Board, Color.White), new ChessPosition('g', 1).ToPosition());
-            Board.PutPart(new Knight(Board, Color.Black), new ChessPosition('g', 8).ToPosition());
-            Board.PutPart(new Bishop(Board, Color.White), new ChessPosition('c', 1).ToPosition());
-            Board.PutPart(new Bishop(Board, Color.Black), new ChessPosition('c', 8).ToPosition());
-            Board.PutPart(new Bishop(Board, Color.White), new ChessPosition('f', 1).ToPosition());
-            Board.PutPart(new Bishop(Board, Color.Black), new ChessPosition('f', 8).ToPosition());
-            Board.PutPart(new Queen(Board, Color.White), new ChessPosition('d', 1).ToPosition());
-            Board.PutPart(new Queen(Board, Color.Black), new ChessPosition('d', 8).ToPosition());
+            PutNewPart(new Rook(Board, Color.White), 'a', 1);
+            PutNewPart(new Rook(Board, Color.Black), 'a', 8);
+            PutNewPart(new Rook(Board, Color.White), 'h', 1);
+            PutNewPart(new Rook(Board, Color.Black), 'h', 8);
+            PutNewPart(new King(Board, Color.White), 'e', 1);
+            PutNewPart(new King(Board, Color.Black), 'e', 8);
+            PutNewPart(new Knight(Board, Color.White), 'b', 1);
+            PutNewPart(new Knight(Board, Color.Black), 'b', 8);
+            PutNewPart(new Knight(Board, Color.White), 'g', 1);
+            PutNewPart(new Knight(Board, Color.Black), 'g', 8);
+            PutNewPart(new Bishop(Board, Color.White), 'c', 1);
+            PutNewPart(new Bishop(Board, Color.Black), 'c', 8);
+            PutNewPart(new Bishop(Board, Color.White), 'f', 1);
+            PutNewPart(new Bishop(Board, Color.Black), 'f', 8);
+            PutNewPart(new Queen(Board, Color.White), 'd', 1);
+            PutNewPart(new Queen(Board, Color.Black), 'd', 8);
         }
     }
 }
