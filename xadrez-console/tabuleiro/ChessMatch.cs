@@ -50,8 +50,24 @@ namespace xadrez_console.tabuleiro
                 UndoMovement(origin, destiny);
                 throw new BoardException("You can't put yourself in check!");
             }
-            Turn++;
-            ChangePlayer();
+            if (IsInCheck(Opponent(CurrentPlayer)))
+            {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
+
+            if (TestCheckMate(Opponent(CurrentPlayer)))
+            {
+                Finished = true;
+            }
+            else
+            {
+                Turn++;
+                ChangePlayer();
+            }
         }
 
         public void UndoMovement(Position origin, Position destiny)
@@ -134,7 +150,37 @@ namespace xadrez_console.tabuleiro
             return false;
         }
 
+        public bool TestCheckMate(Color color)
+        {
+            if (!IsInCheck(color))
+            {
+                return false;
+            }
 
+            foreach (Part x in PiecesInGame(color))
+            {
+                bool[,] mat = x.PossibleMovements();
+                for (int i = 0; i < Board.Rows; i++)
+                {
+                    for (int j = 0; j < Board.Columns; j++)
+                    {
+                        if (mat[i, j])
+                        {
+                            Position origin = x.Position;
+                            Position destiny = new Position(i, j);
+                            Part capturedPart = ExecuteMovement(origin, destiny);
+                            bool testCheck = IsInCheck(color);
+                            UndoMovement(origin, destiny);
+                            if (!testCheck)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
         public void PutNewPart(Part part, char column, int row)
         {
