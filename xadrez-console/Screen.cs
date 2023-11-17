@@ -17,23 +17,19 @@ namespace xadrez_console
             Console.WriteLine();
             Console.WriteLine("Turn: " + match.Turn);
             Console.WriteLine("Waiting for player: " + match.CurrentPlayer);
-            if (match.Check)
+            if (!match.Finished)
             {
-                Console.WriteLine("CHECK!");
+                Console.WriteLine("Waiting for move: " + match.CurrentPlayer);
+                if (match.Check)
+                {
+                    Console.WriteLine("CHECK!");
+                }
             }
-            //if (!match.Finished)
-            //{
-            //    Console.WriteLine("Waiting for move: " + match.CurrentPlayer);
-            //    if (match.Check)
-            //    {
-            //        Console.WriteLine("CHECK!");
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("CHECKMATE!");
-            //    Console.WriteLine("Winner: " + match.CurrentPlayer);
-            //}
+            else
+            {
+                Console.WriteLine("CHECKMATE!");
+                Console.WriteLine("Winner: " + match.CurrentPlayer);
+            }
         }
 
         public static void PrintCapturedParts(ChessMatch match)
