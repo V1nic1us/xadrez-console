@@ -13,7 +13,18 @@ namespace xadrez_console.Parts
 
         public override string ToString()
         {
-            return "H";
+            return "\u265E";
+        }
+
+        private bool CanMove(Position position)
+        {
+            Part p = Board.Part(position);
+            return p == null || p.Color != Color;
+        }
+
+        public override bool[,] PossibleMovements()
+        {
+            throw new NotImplementedException();
         }
     }
 }

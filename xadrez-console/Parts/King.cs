@@ -13,7 +13,7 @@ namespace xadrez_console.Parts
 
         public override string ToString()
         {
-            return "K";
+            return "\u265A";
         }
 
         private bool CanMove(Position position)
