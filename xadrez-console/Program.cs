@@ -42,6 +42,8 @@ namespace xadrez_console
                         Console.ReadLine();
                     }
                 }
+                Console.Clear();
+                Screen.PrintMatch(match);
             }
             catch (BoardException e)
             {
@@ -49,6 +51,9 @@ namespace xadrez_console
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadLine();
             }
+
+            Console.WriteLine("Press any key to finish...");
+            Console.ReadLine();
         }
     }
 }
