@@ -15,6 +15,7 @@ namespace xadrez_console.tabuleiro
         public bool Finished { get; private set; }
         public HashSet<Part> Parts;
         public HashSet<Part> CapturedParts;
+        public bool Check { get; private set; }
 
         public ChessMatch()
         {
@@ -24,10 +25,11 @@ namespace xadrez_console.tabuleiro
             Finished = false;
             Parts = new HashSet<Part>();
             CapturedParts = new HashSet<Part>();
+            Check = false;
             PutPieces();
         }
 
-        public void ExecuteMovement(Position origin, Position destiny)
+        public Part ExecuteMovement(Position origin, Position destiny)
         {
             Part p = Board.RemovePart(origin);
             p.IncrementMovementQuantity();
@@ -37,13 +39,32 @@ namespace xadrez_console.tabuleiro
             {
                 CapturedParts.Add(capturedPart);
             }
+            return capturedPart;
         }
 
         public void PerformMove(Position origin, Position destiny)
         {
             ExecuteMovement(origin, destiny);
+            if (IsInCheck(CurrentPlayer))
+            {
+                UndoMovement(origin, destiny);
+                throw new BoardException("You can't put yourself in check!");
+            }
             Turn++;
             ChangePlayer();
+        }
+
+        public void UndoMovement(Position origin, Position destiny)
+        {
+            Part p = Board.RemovePart(destiny);
+            p.DecrementMovementQuantity();
+            Part capturedPart = Board.RemovePart(origin);
+            Board.PutPart(p, origin);
+            if (capturedPart != null)
+            {
+                Board.PutPart(capturedPart, destiny);
+                CapturedParts.Remove(capturedPart);
+            }
         }
 
         public void ValidateOriginPosition(Position position)
@@ -76,6 +97,44 @@ namespace xadrez_console.tabuleiro
         {
             _ = CurrentPlayer == Color.White ? CurrentPlayer = Color.Black : CurrentPlayer = Color.White; // _ = means that the variable will not be used
         }
+
+        private Color Opponent(Color color)
+        {
+            return color == Color.White ? Color.Black : Color.White;
+        }
+
+        private Part King(Color color)
+        {
+            foreach (Part x in PiecesInGame(color))
+            {
+                if (x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        public bool IsInCheck(Color color)
+        {
+            Part K = King(color);
+            if (K == null)
+            {
+                throw new BoardException("There is no " + color + " king on the board!");
+            }
+
+            foreach (Part x in PiecesInGame(Opponent(color)))
+            {
+                bool[,] mat = x.PossibleMovements();
+                if (mat[K.Position.Row, K.Position.Column])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
 
         public void PutNewPart(Part part, char column, int row)
         {
@@ -126,16 +185,16 @@ namespace xadrez_console.tabuleiro
             PutNewPart(new Rook(Board, Color.Black), 'h', 8);
             PutNewPart(new King(Board, Color.White), 'e', 1);
             PutNewPart(new King(Board, Color.Black), 'e', 8);
-            PutNewPart(new Knight(Board, Color.White), 'b', 1);
-            PutNewPart(new Knight(Board, Color.Black), 'b', 8);
-            PutNewPart(new Knight(Board, Color.White), 'g', 1);
-            PutNewPart(new Knight(Board, Color.Black), 'g', 8);
-            PutNewPart(new Bishop(Board, Color.White), 'c', 1);
-            PutNewPart(new Bishop(Board, Color.Black), 'c', 8);
-            PutNewPart(new Bishop(Board, Color.White), 'f', 1);
-            PutNewPart(new Bishop(Board, Color.Black), 'f', 8);
-            PutNewPart(new Queen(Board, Color.White), 'd', 1);
-            PutNewPart(new Queen(Board, Color.Black), 'd', 8);
+            //PutNewPart(new Knight(Board, Color.White), 'b', 1);
+            //PutNewPart(new Knight(Board, Color.Black), 'b', 8);
+            //PutNewPart(new Knight(Board, Color.White), 'g', 1);
+            //PutNewPart(new Knight(Board, Color.Black), 'g', 8);
+            //PutNewPart(new Bishop(Board, Color.White), 'c', 1);
+            //PutNewPart(new Bishop(Board, Color.Black), 'c', 8);
+            //PutNewPart(new Bishop(Board, Color.White), 'f', 1);
+            //PutNewPart(new Bishop(Board, Color.Black), 'f', 8);
+            //PutNewPart(new Queen(Board, Color.White), 'd', 1);
+            //PutNewPart(new Queen(Board, Color.Black), 'd', 8);
         }
     }
 }
