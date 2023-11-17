@@ -22,9 +22,9 @@ namespace xadrez_console.tabuleiro
             Turn = 1;
             CurrentPlayer = Color.White;
             Finished = false;
-            PutPieces();
             Parts = new HashSet<Part>();
             CapturedParts = new HashSet<Part>();
+            PutPieces();
         }
 
         public void ExecuteMovement(Position origin, Position destiny)
