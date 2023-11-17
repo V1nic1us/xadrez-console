@@ -27,6 +27,7 @@ namespace xadrez_console
             }
             else
             {
+                Console.WriteLine();
                 Console.WriteLine("CHECKMATE!");
                 Console.WriteLine("Winner: " + match.CurrentPlayer);
             }
