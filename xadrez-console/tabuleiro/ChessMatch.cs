@@ -224,26 +224,27 @@ namespace xadrez_console.tabuleiro
 
         public void PutPieces()
         {
-            PutNewPart(new Rook(Board, Color.White), 'd', 2);
+            PutNewPart(new Rook(Board, Color.White), 'a', 1);
             PutNewPart(new Rook(Board, Color.Black), 'a', 8);
             PutNewPart(new Rook(Board, Color.White), 'h', 1);
-            PutNewPart(new Rook(Board, Color.White), 'f', 1);
-            PutNewPart(new Rook(Board, Color.Black), 'f', 8);
-            PutNewPart(new Rook(Board, Color.White), 'd', 1);
-            PutNewPart(new Rook(Board, Color.Black), 'd', 8);
             PutNewPart(new Rook(Board, Color.Black), 'h', 8);
             PutNewPart(new King(Board, Color.White), 'e', 1);
             PutNewPart(new King(Board, Color.Black), 'e', 8);
-            //PutNewPart(new Knight(Board, Color.White), 'b', 1);
-            //PutNewPart(new Knight(Board, Color.Black), 'b', 8);
-            //PutNewPart(new Knight(Board, Color.White), 'g', 1);
-            //PutNewPart(new Knight(Board, Color.Black), 'g', 8);
-            //PutNewPart(new Bishop(Board, Color.White), 'c', 1);
-            //PutNewPart(new Bishop(Board, Color.Black), 'c', 8);
-            //PutNewPart(new Bishop(Board, Color.White), 'f', 1);
-            //PutNewPart(new Bishop(Board, Color.Black), 'f', 8);
-            //PutNewPart(new Queen(Board, Color.White), 'd', 1);
-            //PutNewPart(new Queen(Board, Color.Black), 'd', 8);
+            PutNewPart(new Knight(Board, Color.White), 'b', 1);
+            PutNewPart(new Knight(Board, Color.Black), 'b', 8);
+            PutNewPart(new Knight(Board, Color.White), 'g', 1);
+            PutNewPart(new Knight(Board, Color.Black), 'g', 8);
+            PutNewPart(new Bishop(Board, Color.White), 'c', 1);
+            PutNewPart(new Bishop(Board, Color.Black), 'c', 8);
+            PutNewPart(new Bishop(Board, Color.White), 'f', 1);
+            PutNewPart(new Bishop(Board, Color.Black), 'f', 8);
+            PutNewPart(new Queen(Board, Color.White), 'd', 1);
+            PutNewPart(new Queen(Board, Color.Black), 'd', 8);
+            for (int i = 0; i < 8; i++)
+            {
+                PutNewPart(new Pawn(Board, Color.White), (char)('a' + i), 2);
+                PutNewPart(new Pawn(Board, Color.Black), (char)('a' + i), 7);
+            }
         }
     }
 }
