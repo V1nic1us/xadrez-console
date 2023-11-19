@@ -39,6 +39,22 @@ namespace xadrez_console.tabuleiro
             {
                 CapturedParts.Add(capturedPart);
             }
+            if (p is King && destiny.Column == origin.Column + 2)
+            {
+                Position originT = new (origin.Row, origin.Column + 3);
+                Position destinyT = new (origin.Row, origin.Column + 1);
+                Part T = Board.RemovePart(originT);
+                T.IncrementMovementQuantity();
+                Board.PutPart(T, destinyT);
+            }
+            if (p is King && destiny.Column == origin.Column - 2)
+            {
+                Position originT = new (origin.Row, origin.Column - 4);
+                Position destinyT = new (origin.Row, origin.Column - 1);
+                Part T = Board.RemovePart(originT);
+                T.IncrementMovementQuantity();
+                Board.PutPart(T, destinyT);
+            }
             return capturedPart;
         }
 
@@ -79,6 +95,23 @@ namespace xadrez_console.tabuleiro
                 Board.PutPart(capturedPart, destiny);
                 CapturedParts.Remove(capturedPart);
             }
+            if (p is King && destiny.Column == origin.Column + 2)
+            {
+                Position originT = new (origin.Row, origin.Column + 3);
+                Position destinyT = new (origin.Row, origin.Column + 1);
+                Part T = Board.RemovePart(destinyT);
+                T.DecrementMovementQuantity();
+                Board.PutPart(T, originT);
+            }
+            if (p is King && destiny.Column == origin.Column - 2)
+            {
+                Position originT = new (origin.Row, origin.Column - 4);
+                Position destinyT = new (origin.Row, origin.Column - 1);
+                Part T = Board.RemovePart(destinyT);
+                T.DecrementMovementQuantity();
+                Board.PutPart(T, originT);
+            }
+
             Board.PutPart(p, origin);
         }
 
@@ -228,8 +261,8 @@ namespace xadrez_console.tabuleiro
             PutNewPart(new Rook(Board, Color.Black), 'a', 8);
             PutNewPart(new Rook(Board, Color.White), 'h', 1);
             PutNewPart(new Rook(Board, Color.Black), 'h', 8);
-            PutNewPart(new King(Board, Color.White), 'e', 1);
-            PutNewPart(new King(Board, Color.Black), 'e', 8);
+            PutNewPart(new King(Board, Color.White, this), 'e', 1);
+            PutNewPart(new King(Board, Color.Black, this), 'e', 8);
             PutNewPart(new Knight(Board, Color.White), 'b', 1);
             PutNewPart(new Knight(Board, Color.Black), 'b', 8);
             PutNewPart(new Knight(Board, Color.White), 'g', 1);
