@@ -16,6 +16,7 @@ namespace xadrez_console.tabuleiro
         public HashSet<Part> Parts;
         public HashSet<Part> CapturedParts;
         public bool Check { get; private set; }
+        public Part EnPassantVulnerable { get; private set; }
 
         public ChessMatch()
         {
@@ -26,6 +27,7 @@ namespace xadrez_console.tabuleiro
             Parts = new HashSet<Part>();
             CapturedParts = new HashSet<Part>();
             Check = false;
+            EnPassantVulnerable = null;
             PutPieces();
         }
 
@@ -41,19 +43,36 @@ namespace xadrez_console.tabuleiro
             }
             if (p is King && destiny.Column == origin.Column + 2)
             {
-                Position originT = new (origin.Row, origin.Column + 3);
-                Position destinyT = new (origin.Row, origin.Column + 1);
+                Position originT = new(origin.Row, origin.Column + 3);
+                Position destinyT = new(origin.Row, origin.Column + 1);
                 Part T = Board.RemovePart(originT);
                 T.IncrementMovementQuantity();
                 Board.PutPart(T, destinyT);
             }
             if (p is King && destiny.Column == origin.Column - 2)
             {
-                Position originT = new (origin.Row, origin.Column - 4);
-                Position destinyT = new (origin.Row, origin.Column - 1);
+                Position originT = new(origin.Row, origin.Column - 4);
+                Position destinyT = new(origin.Row, origin.Column - 1);
                 Part T = Board.RemovePart(originT);
                 T.IncrementMovementQuantity();
                 Board.PutPart(T, destinyT);
+            }
+            if (p is Pawn)
+            {
+                if (origin.Column != destiny.Column && capturedPart == null)
+                {
+                    Position posP;
+                    if (p.Color == Color.White)
+                    {
+                        posP = new Position(destiny.Row + 1, destiny.Column);
+                    }
+                    else
+                    {
+                        posP = new Position(destiny.Row - 1, destiny.Column);
+                    }
+                    capturedPart = Board.RemovePart(posP);
+                    CapturedParts.Add(capturedPart);
+                }
             }
             return capturedPart;
         }
@@ -84,6 +103,16 @@ namespace xadrez_console.tabuleiro
                 Turn++;
                 ChangePlayer();
             }
+
+            Part p = Board.Part(destiny);
+            if (p is Pawn && (destiny.Row == origin.Row - 2 || destiny.Row == origin.Row + 2))
+            {
+                EnPassantVulnerable = p;
+            }
+            else
+            {
+                EnPassantVulnerable = null;
+            }
         }
 
         public void UndoMovement(Position origin, Position destiny, Part capturedPart)
@@ -97,19 +126,36 @@ namespace xadrez_console.tabuleiro
             }
             if (p is King && destiny.Column == origin.Column + 2)
             {
-                Position originT = new (origin.Row, origin.Column + 3);
-                Position destinyT = new (origin.Row, origin.Column + 1);
+                Position originT = new(origin.Row, origin.Column + 3);
+                Position destinyT = new(origin.Row, origin.Column + 1);
                 Part T = Board.RemovePart(destinyT);
                 T.DecrementMovementQuantity();
                 Board.PutPart(T, originT);
             }
             if (p is King && destiny.Column == origin.Column - 2)
             {
-                Position originT = new (origin.Row, origin.Column - 4);
-                Position destinyT = new (origin.Row, origin.Column - 1);
+                Position originT = new(origin.Row, origin.Column - 4);
+                Position destinyT = new(origin.Row, origin.Column - 1);
                 Part T = Board.RemovePart(destinyT);
                 T.DecrementMovementQuantity();
                 Board.PutPart(T, originT);
+            }
+            if (p is Pawn)
+            {
+                if (origin.Column != destiny.Column && capturedPart == EnPassantVulnerable)
+                {
+                    Part pawn = Board.RemovePart(destiny);
+                    Position posP;
+                    if (p.Color == Color.White)
+                    {
+                        posP = new Position(3, destiny.Column);
+                    }
+                    else
+                    {
+                        posP = new Position(4, destiny.Column);
+                    }
+                    Board.PutPart(pawn, posP);
+                }
             }
 
             Board.PutPart(p, origin);
@@ -275,8 +321,8 @@ namespace xadrez_console.tabuleiro
             PutNewPart(new Queen(Board, Color.Black), 'd', 8);
             for (int i = 0; i < 8; i++)
             {
-                PutNewPart(new Pawn(Board, Color.White), (char)('a' + i), 2);
-                PutNewPart(new Pawn(Board, Color.Black), (char)('a' + i), 7);
+                PutNewPart(new Pawn(Board, Color.White, this), (char)('a' + i), 2);
+                PutNewPart(new Pawn(Board, Color.Black, this), (char)('a' + i), 7);
             }
         }
     }
