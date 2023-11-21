@@ -80,10 +80,22 @@ namespace xadrez_console.tabuleiro
         public void PerformMove(Position origin, Position destiny)
         {
             Part capturedPart = ExecuteMovement(origin, destiny);
+            Part p = Board.Part(destiny);
             if (IsInCheck(CurrentPlayer))
             {
                 UndoMovement(origin, destiny, capturedPart);
                 throw new BoardException("You can't put yourself in check!");
+            }
+            if (p is Pawn)
+            {
+                if ((p.Color == Color.White && destiny.Row == 0) || (p.Color == Color.Black && destiny.Row == 7))
+                {
+                    p = Board.RemovePart(destiny);
+                    Parts.Remove(p);
+                    Part queen = new Queen(Board, p.Color);
+                    Board.PutPart(queen, destiny);
+                    Parts.Add(queen);
+                }
             }
             if (IsInCheck(Opponent(CurrentPlayer)))
             {
@@ -104,7 +116,6 @@ namespace xadrez_console.tabuleiro
                 ChangePlayer();
             }
 
-            Part p = Board.Part(destiny);
             if (p is Pawn && (destiny.Row == origin.Row - 2 || destiny.Row == origin.Row + 2))
             {
                 EnPassantVulnerable = p;
